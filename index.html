@@ -1,222 +1,166 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Биомеханический гид</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-            color: #1f2937;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            background: #ffffff;
-            max-width: 480px;
-            width: 100%;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            padding: 24px;
-        }
-        h1 { font-size: 20px; text-align: center; margin-top: 0; }
-        p.subtitle { font-size: 13px; text-align: center; color: #6b7280; margin-bottom: 20px; }
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-        .tab-btn {
-            flex: 1; padding: 10px; border: 1px solid #d1d5db;
-            background: #f9fafb; border-radius: 8px; font-weight: bold; cursor: pointer;
-        }
-        .tab-btn.active { background: #2563eb; color: #ffffff; border-color: #2563eb; }
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 14px; font-weight: bold; margin-bottom: 6px; }
-        input, select {
-            width: 100%; padding: 10px; border: 1px solid #d1d5db;
-            border-radius: 8px; font-size: 15px; box-sizing: border-box;
-        }
-        .calc-btn {
-            width: 100%; padding: 12px; background: #10b981; color: white;
-            border: none; border-radius: 8px; font-size: 16px; font-weight: bold;
-            cursor: pointer; margin-top: 10px;
-        }
-        .calc-btn:hover { background: #059669; }
-        .result-box {
-            margin-top: 20px; padding: 16px; border-radius: 10px;
-            background: #f8fafc; border-left: 4px solid #2563eb;
-            font-size: 14px; line-height: 1.5; display: none;
-        }
-        .hidden { display: none; }
-        .advice-box {
-            margin-top: 10px; padding: 10px; border-radius: 8px;
-            background: #ffffff; border: 1px solid #e5e7eb;
-        }
-        .status-safe { color: #059669; font-weight: bold; }
-        .status-warn { color: #d97706; font-weight: bold; }
-        .status-danger { color: #dc2626; font-weight: bold; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BioMech Analyzer</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #eef2f6; color: #0f172a; margin: 0; padding: 16px; display: flex; justify-content: center; }
+  .card { background: #fff; max-width: 460px; width: 100%; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); overflow: hidden; }
+  .head { background: linear-gradient(135deg, #0f172a, #1e3a8a); color: #fff; padding: 22px 20px; text-align: center; }
+  .badge { display: inline-block; background: rgba(255,255,255,0.15); padding: 4px 10px; border-radius: 20px; font-size: 11px; text-transform: uppercase; margin-bottom: 6px; }
+  .head h1 { font-size: 21px; margin: 0 0 4px; }
+  .head p { font-size: 13px; color: #cbd5e1; margin: 0; }
+  .body { padding: 20px; }
+  .tabs { display: flex; background: #f1f5f9; padding: 4px; border-radius: 12px; margin-bottom: 18px; }
+  .tab { flex: 1; padding: 10px; border: none; background: transparent; border-radius: 9px; font-weight: 600; color: #64748b; cursor: pointer; }
+  .tab.active { background: #fff; color: #2563eb; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .group { margin-bottom: 14px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 5px; }
+  input, select { width: 100%; padding: 11px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-size: 15px; background: #f8fafc; box-sizing: border-box; }
+  .btn { width: 100%; padding: 14px; background: #2563eb; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 6px; }
+  .res { margin-top: 18px; padding: 16px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0; display: none; }
+  .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .mbox { background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
+  .mlabel { font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; }
+  .mval { font-size: 18px; font-weight: 700; margin-top: 2px; }
+  .bar-head { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+  .bar { height: 8px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+  .fill { height: 100%; border-radius: 6px; transition: width 0.3s; }
+  .advice { background: #fff; padding: 12px; border-radius: 10px; border-left: 4px solid #2563eb; font-size: 13.5px; line-height: 1.45; margin-top: 12px; }
+  .note { margin-top: 10px; font-size: 11px; color: #64748b; text-align: center; font-family: monospace; }
+  .hidden { display: none; }
+</style>
 </head>
 <body>
-
-<div class="container">
-    <h1>Биомеханический гид</h1>
-    <p class="subtitle">Оценка безопасности техники и нагрузки в базовых упражнениях</p>
-
+<div class="card">
+  <div class="head">
+    <div class="badge">Научно-практический проект</div>
+    <h1>BioMech Analyzer</h1>
+    <p>Биомеханическая оценка техники и нагрузки в зале</p>
+  </div>
+  <div class="body">
     <div class="tabs">
-        <button type="button" id="btn-tab-squat" class="tab-btn active">Приседания</button>
-        <button type="button" id="btn-tab-pullup" class="tab-btn">Подтягивания</button>
+      <button type="button" id="t-sq" class="tab active">Приседания</button>
+      <button type="button" id="t-pu" class="tab">Подтягивания</button>
     </div>
-
-    <div id="squat-section">
-        <div class="form-group">
-            <label>Ваш вес (кг):</label>
-            <input type="number" id="sq-weight" value="61">
+    <div id="sec-sq">
+      <div class="row">
+        <div class="group"><label>Ваш вес (кг)</label><input type="number" id="sq-w" placeholder="Ваш вес"></div>
+        <div class="group"><label>Ваш рост (см)</label><input type="number" id="sq-h" placeholder="Ваш рост"></div>
+      </div>
+      <div class="group"><label>Вес штанги (кг)</label><input type="number" id="sq-b" placeholder="0 (если без веса)"></div>
+      <div class="group">
+        <label>Положение корпуса в нижней точке</label>
+        <select id="sq-a">
+          <option value="25">Спина почти вертикальна (эталон)</option>
+          <option value="40" selected>Умеренный наклон вперед (рабочий стиль)</option>
+          <option value="58">Сильный «клевок» вперед (ошибка)</option>
+        </select>
+      </div>
+      <button type="button" id="btn-sq" class="btn">Рассчитать биомеханику приседа</button>
+      <div id="res-sq" class="res">
+        <div class="metrics">
+          <div class="mbox"><div class="mlabel">Момент силы</div><div class="mval" id="sq-m1"></div></div>
+          <div class="mbox"><div class="mlabel">Эквивалент</div><div class="mval" id="sq-m2"></div></div>
         </div>
-        <div class="form-group">
-            <label>Вес штанги (кг):</label>
-            <input type="number" id="sq-barbell" value="50">
-        </div>
-        <div class="form-group">
-            <label>Ваш рост (см):</label>
-            <input type="number" id="sq-height" value="175">
-        </div>
-        <div class="form-group">
-            <label>Положение спины в нижней точке:</label>
-            <select id="sq-posture">
-                <option value="25">Спина почти вертикальна, грудь смотрит вперед (идеально)</option>
-                <option value="40" selected>Умеренный наклон корпуса вперед (рабочий вариант)</option>
-                <option value="58">Сильный «клевок» вперед, таз уходит назад быстрее плеч (ошибка)</option>
-            </select>
-        </div>
-        <button type="button" id="btn-calc-squat" class="calc-btn">Проверить технику и нагрузку</button>
-        <div id="sq-result" class="result-box"></div>
+        <div class="bar-head"><span>Риск перегрузки спины</span><span id="sq-st"></span></div>
+        <div class="bar"><div class="fill" id="sq-bar"></div></div>
+        <div class="advice" id="sq-adv-box"><b>Рекомендация:</b><div id="sq-adv"></div></div>
+        <div class="note">Формула рычага: M = F · L · sin(α)</div>
+      </div>
     </div>
-
-    <div id="pullup-section" class="hidden">
-        <div class="form-group">
-            <label>Ваш вес (кг):</label>
-            <input type="number" id="pu-weight" value="61">
+    <div id="sec-pu" class="hidden">
+      <div class="row">
+        <div class="group"><label>Ваш вес (кг)</label><input type="number" id="pu-w" placeholder="Ваш вес"></div>
+        <div class="group"><label>Ваш рост (см)</label><input type="number" id="pu-h" placeholder="Ваш рост"></div>
+      </div>
+      <div class="group"><label>Дополнительный вес на поясе (кг)</label><input type="number" id="pu-e" placeholder="0 (если свой вес)"></div>
+      <div class="group">
+        <label>Темп и техника выполнения</label>
+        <select id="pu-s">
+          <option value="1.0">Взрывной подъем вверх (~1.0 сек)</option>
+          <option value="2.0" selected>Четкий силовой темп без раскачки (~2.0 сек)</option>
+          <option value="3.5">Медленный подконтрольный темп (~3.5 сек)</option>
+        </select>
+      </div>
+      <button type="button" id="btn-pu" class="btn">Рассчитать мощность и работу</button>
+      <div id="res-pu" class="res">
+        <div class="metrics">
+          <div class="mbox"><div class="mlabel">Работа за повтор</div><div class="mval" id="pu-m1"></div></div>
+          <div class="mbox"><div class="mlabel">Мощность тяги</div><div class="mval" id="pu-m2"></div></div>
         </div>
-        <div class="form-group">
-            <label>Дополнительный вес на поясе (кг):</label>
-            <input type="number" id="pu-extra" value="0">
-        </div>
-        <div class="form-group">
-            <label>Ваш рост (см):</label>
-            <input type="number" id="pu-height" value="175">
-        </div>
-        <div class="form-group">
-            <label>Стиль выполнения повторений:</label>
-            <select id="pu-style">
-                <option value="1.0">Взрывной подъем вверх (~1 сек на повтор)</option>
-                <option value="2.0" selected>Четкий силовой темп без раскачки (~2 сек на повтор)</option>
-                <option value="3.5">Медленный подконтрольный темп с паузой наверху (~3.5 сек)</option>
-            </select>
-        </div>
-        <button type="button" id="btn-calc-pullup" class="calc-btn">Рассчитать работу и получить совет</button>
-        <div id="pu-result" class="result-box"></div>
+        <div class="bar-head"><span>Интенсивность</span><span id="pu-st"></span></div>
+        <div class="bar"><div class="fill" id="pu-bar"></div></div>
+        <div class="advice" id="pu-adv-box"><b>Рекомендация:</b><div id="pu-adv"></div></div>
+        <div class="note">Формулы: A = m·g·h | N = A / t</div>
+      </div>
     </div>
+  </div>
 </div>
-
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    var tabSquat = document.getElementById("btn-tab-squat");
-    var tabPullup = document.getElementById("btn-tab-pullup");
-    var secSquat = document.getElementById("squat-section");
-    var secPullup = document.getElementById("pullup-section");
-
-    tabSquat.onclick = function() {
-        tabSquat.classList.add("active");
-        tabPullup.classList.remove("active");
-        secSquat.classList.remove("hidden");
-        secPullup.classList.add("hidden");
-    };
-
-    tabPullup.onclick = function() {
-        tabPullup.classList.add("active");
-        tabSquat.classList.remove("active");
-        secPullup.classList.remove("hidden");
-        secSquat.classList.add("hidden");
-    };
-
-    document.getElementById("btn-calc-squat").onclick = function() {
-        var bw = parseFloat(document.getElementById("sq-weight").value);
-        var bar = parseFloat(document.getElementById("sq-barbell").value);
-        var h = parseFloat(document.getElementById("sq-height").value);
-        var angle = parseFloat(document.getElementById("sq-posture").value);
-
-        if (isNaN(bw) || isNaN(bar) || isNaN(h)) {
-            alert("Введите корректные числа.");
-            return;
-        }
-
-        var torso = (h / 100) * 0.30;
-        var rad = angle * (Math.PI / 180);
-        var lever = torso * Math.sin(rad);
-        var force = (bw * 0.60 + bar) * 9.81;
-        var torque = force * lever;
-
-        var idealLever = torso * Math.sin(25 * (Math.PI / 180));
-        var ratio = lever / idealLever;
-        var eqBar = Math.round(((bw * 0.60 + bar) * ratio) - (bw * 0.60));
-
-        var statusHtml = "";
-        var adviceText = "";
-
-        if (angle === 25) {
-            statusHtml = "<span class='status-safe'>Отличная биомеханика!</span>";
-            adviceText = "Нагрузка распределена оптимально. Поясница защищена, можно плавно прогрессировать в весах.";
-        } else if (angle === 40) {
-            statusHtml = "<span class='status-warn'>Рабочая техника (повышенная нагрузка на спину).</span>";
-            adviceText = "Из-за наклона корпуса нагрузка на поясницу равна идеальному приседу со штангой " + eqBar + " кг. Держите пресс в жестком напряжении.";
-        } else {
-            statusHtml = "<span class='status-danger'>Высокий риск перегрузки поясницы!</span>";
-            adviceText = "При таком клевке нагрузка на поясницу возрастает как при штанге " + eqBar + " кг! Снизьте рабочий вес на 15-20% и поработайте над растяжкой голеностопа.";
-        }
-
-        var resBox = document.getElementById("sq-result");
-        resBox.style.display = "block";
-        resBox.innerHTML = "<b>Статус:</b> " + statusHtml + "<br><b>Момент силы:</b> " + torque.toFixed(0) + " Н·м<div class='advice-box'><b>Совет для зала:</b><br>" + adviceText + "</div>";
-    };
-
-    document.getElementById("btn-calc-pullup").onclick = function() {
-        var bw = parseFloat(document.getElementById("pu-weight").value);
-        var extra = parseFloat(document.getElementById("pu-extra").value);
-        var h = parseFloat(document.getElementById("pu-height").value);
-        var time = parseFloat(document.getElementById("pu-style").value);
-
-        if (isNaN(bw) || isNaN(extra) || isNaN(h)) {
-            alert("Введите корректные числа.");
-            return;
-        }
-
-        var totalMass = bw + extra;
-        var dist = (h / 100) * 0.32;
-        var force = totalMass * 9.81;
-        var work = force * dist;
-        var power = work / time;
-
-        var statusHtml = "";
-        var adviceText = "";
-
-        if (time === 1.0) {
-            statusHtml = "<span class='status-warn'>Взрывной силовой стиль</span>";
-            adviceText = "Максимальная пиковая мощность. Следите, чтобы подъем шел за счет сведения лопаток, а не за счет рывка ногами.";
-        } else if (time === 2.0) {
-            statusHtml = "<span class='status-safe'>Эталонная техника</span>";
-            adviceText = "Оптимальный баланс мощности и контроля. Опускайтесь плавно, чтобы защитить локтевые и плечевые суставы.";
-        } else {
-            statusHtml = "<span class='status-safe'>Максимальный контроль</span>";
-            adviceText = "Высокое время под нагрузкой. Отлично укрепляет связки и прорабатывает мышцы спины без большого доп. веса.";
-        }
-
-        var resBox = document.getElementById("pu-result");
-        resBox.style.display = "block";
-        resBox.innerHTML = "<b>Стиль:</b> " + statusHtml + "<br><b>Работа за повтор:</b> " + work.toFixed(0) + " Дж (Мощность: " + power.toFixed(0) + " Вт)<div class='advice-box'><b>Совет для зала:</b><br>" + adviceText + "</div>";
-    };
-});
+document.getElementById("t-sq").onclick = function() {
+  this.classList.add("active");
+  document.getElementById("t-pu").classList.remove("active");
+  document.getElementById("sec-sq").classList.remove("hidden");
+  document.getElementById("sec-pu").classList.add("hidden");
+};
+document.getElementById("t-pu").onclick = function() {
+  this.classList.add("active");
+  document.getElementById("t-sq").classList.remove("active");
+  document.getElementById("sec-pu").classList.remove("hidden");
+  document.getElementById("sec-sq").classList.add("hidden");
+};
+document.getElementById("btn-sq").onclick = function() {
+  var bw = parseFloat(document.getElementById("sq-w").value);
+  var h = parseFloat(document.getElementById("sq-h").value);
+  var bVal = document.getElementById("sq-b").value.trim();
+  var bar = bVal === "" ? 0 : parseFloat(bVal);
+  var ang = parseFloat(document.getElementById("sq-a").value);
+  if (isNaN(bw) || bw <= 0 || isNaN(h) || h <= 0 || isNaN(bar) || bar < 0) { alert("Укажите реальный вес и рост."); return; }
+  var torso = (h / 100) * 0.30;
+  var lever = torso * Math.sin(ang * Math.PI / 180);
+  var torque = (bw * 0.60 + bar) * 9.81 * lever;
+  var ratio = lever / (torso * Math.sin(25 * Math.PI / 180));
+  var eqBar = Math.max(0, Math.round(((bw * 0.60 + bar) * ratio) - (bw * 0.60)));
+  var pct = Math.round((ratio - 1) * 100);
+  var st = "Оптимально", col = "#10b981", w = "35%", adv = "Нагрузка на поясницу минимальна. Можно плавно увеличивать веса.";
+  if (ang === 40) { st = "Повышенная (+" + pct + "%)"; col = "#f59e0b"; w = "68%"; adv = "Поясница испытывает нагрузку как при идеальном приседе со штангой " + eqBar + " кг. Держите пресс в напряжении."; }
+  if (ang === 58) { st = "Критическая (+" + pct + "%)"; col = "#ef4444"; w = "96%"; adv = "Опасный клевок! Нагрузка на спину как при штанге " + eqBar + " кг. Снизьте вес на 15-20% и поработайте над голеностопом."; }
+  document.getElementById("sq-m1").textContent = torque.toFixed(0) + " Н·м";
+  document.getElementById("sq-m2").textContent = eqBar + " кг";
+  document.getElementById("sq-st").textContent = st;
+  document.getElementById("sq-st").style.color = col;
+  document.getElementById("sq-bar").style.width = w;
+  document.getElementById("sq-bar").style.backgroundColor = col;
+  document.getElementById("sq-adv-box").style.borderLeftColor = col;
+  document.getElementById("sq-adv").textContent = adv;
+  document.getElementById("res-sq").style.display = "block";
+};
+document.getElementById("btn-pu").onclick = function() {
+  var bw = parseFloat(document.getElementById("pu-w").value);
+  var h = parseFloat(document.getElementById("pu-h").value);
+  var eVal = document.getElementById("pu-e").value.trim();
+  var ext = eVal === "" ? 0 : parseFloat(eVal);
+  var t = parseFloat(document.getElementById("pu-s").value);
+  if (isNaN(bw) || bw <= 0 || isNaN(h) || h <= 0 || isNaN(ext) || ext < 0) { alert("Укажите реальный вес и рост."); return; }
+  var work = (bw + ext) * 9.81 * ((h / 100) * 0.32);
+  var power = work / t;
+  var st = "Эталонная техника", col = "#10b981", w = "65%", adv = "Оптимальный баланс работы и времени под нагрузкой. Опускайтесь плавно (~2 сек).";
+  if (t === 1.0) { st = "Взрывной режим"; col = "#f59e0b"; w = "90%"; adv = "Максимальная пиковая мощность. Развивает взрывную силу, но следите за отсутствием рывка ногами."; }
+  if (t === 3.5) { st = "Статодинамика"; col = "#3b82f6"; w = "45%"; adv = "Максимальный контроль без ударной нагрузки на суставы. Отлично для отработки траектории."; }
+  document.getElementById("pu-m1").textContent = work.toFixed(0) + " Дж";
+  document.getElementById("pu-m2").textContent = power.toFixed(0) + " Вт";
+  document.getElementById("pu-st").textContent = st;
+  document.getElementById("pu-st").style.color = col;
+  document.getElementById("pu-bar").style.width = w;
+  document.getElementById("pu-bar").style.backgroundColor = col;
+  document.getElementById("pu-adv-box").style.borderLeftColor = col;
+  document.getElementById("pu-adv").textContent = adv;
+  document.getElementById("res-pu").style.display = "block";
+};
 </script>
-
 </body>
 </html>
+
